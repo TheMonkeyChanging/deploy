@@ -1,0 +1,94 @@
+version: '3.9'
+services:
+#   redis:
+#     image: redis:7.0.3
+#     container_name: biot-redis
+    #    ports:
+    #      - "6379:6379"
+#     volumes:
+#       - "redis-volume:/data"
+#     environment:
+#       - TZ=Asia/Shanghai
+  things-core:
+    image: registry.cn-shanghai.aliyuncs.com/biot_1/things-core:0.0.1-SNAPSHOT
+    container_name: things-core
+    ports:
+      - "8080:8080" # API端口
+    environment:
+#       - "JAVA_OPTS=-Duser.language=zh -XX:+UseG1GC"
+      - "TZ=Asia/Shanghai"
+      # database config
+      - "spring.datasource.url=jdbc:mysql://10.23.103.132:3306/things-core"
+      - "spring.datasource.username=root"
+      - "spring.datasource.password=Bb123456"
+      - "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver"
+      # rabbitmq config
+      - "spring.rabbitmq.host=10.23.103.132"
+      - "spring.rabbitmq.port=5672"
+      - "spring.rabbitmq.username=rabbit"
+      - "spring.rabbitmq.password=12345678"
+      - "spring.rabbitmq.virtual-host=iot"
+      # nacos config
+      - "spring.cloud.nacos.discovery.server-addr=10.23.103.132:8848"
+      # influxdb config
+      - "biot.tsdb.influx.host=http://10.23.103.132:8086"
+      - "biot.tsdb.influx.token=TNPoc-yJwKzeTrL1yIWsQZQGKcH-g6ytu09nLVZezudfFnpI4PVW2IIqDlXp6Kjn0MPzaEgWHSbBUTRYe6546g=="
+      - "biot.tsdb.influx.org=abama"
+      - "biot.tsdb.influx.data_bucket=iot-data"
+#     links:
+#       - redis:redis
+#     depends_on:
+#       - redis
+  message-router:
+    image: registry.cn-shanghai.aliyuncs.com/biot_1/message-router:0.0.1-SNAPSHOT
+    container_name: message-router
+    ports:
+      - "8180:8180" # API端口
+    environment:
+      - "TZ=Asia/Shanghai"
+      # database config
+      - "spring.datasource.url=jdbc:mysql://10.23.103.132:3306/message-router"
+      - "spring.datasource.username=root"
+      - "spring.datasource.password=Bb123456"
+      - "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver"
+      # rabbitmq config
+      - "spring.rabbitmq.host=10.23.103.132"
+      - "spring.rabbitmq.port=5672"
+      - "spring.rabbitmq.username=rabbit"
+      - "spring.rabbitmq.password=12345678"
+      - "spring.rabbitmq.virtual-host=iot"
+      # nacos config
+      - "spring.cloud.nacos.discovery.server-addr=10.23.103.132:8848"
+#     links:
+#       - redis:redis
+#     depends_on:
+#       - redis
+  rule-engine:
+    image: registry.cn-shanghai.aliyuncs.com/biot_1/rule-engine:0.0.1-SNAPSHOT
+    container_name: rule-engine
+    ports:
+      - "8280:8280" # API端口
+    environment:
+      - "TZ=Asia/Shanghai"
+      # database config
+      - "spring.datasource.url=jdbc:mysql://10.23.103.132:3306/rule-engine"
+      - "spring.datasource.username=root"
+      - "spring.datasource.password=Bb123456"
+      - "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver"
+     # rabbitmq config
+      - "spring.rabbitmq.host=10.23.103.132"
+      - "spring.rabbitmq.port=5672"
+      - "spring.rabbitmq.username=rabbit"
+      - "spring.rabbitmq.password=12345678"
+      - "spring.rabbitmq.virtual-host=iot"
+      # nacos config
+      - "spring.cloud.nacos.discovery.server-addr=10.23.103.132:8848"
+      #  redis config
+      - "spring.redis.host=10.23.103.132"
+      - "spring.redis.port=6379"
+      #- "spring.redis.password=123456"
+      # influxdb config
+      - "biot.tsdb.influx.host=http://10.23.103.132:8086"
+      - "biot.tsdb.influx.token=TNPoc-yJwKzeTrL1yIWsQZQGKcH-g6ytu09nLVZezudfFnpI4PVW2IIqDlXp6Kjn0MPzaEgWHSbBUTRYe6546g=="
+      - "biot.tsdb.influx.org=abama"
+      - "biot.tsdb.influx.trigger_bucket=rule_trigger_trace"

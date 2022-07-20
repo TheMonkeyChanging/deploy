@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-router-deployment
+  labels:
+    app: message-router
+spec:
+  selector:
+    matchLabels:
+      app: message-router
+  #replicas: 2
+  template:
+    metadata:
+      labels:
+        app: message-router
+    spec:
+      containers:
+        - name: message-router
+          image: registry.cn-shanghai.aliyuncs.com/biot_1/message-router:0.0.1-SNAPSHOT
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8180

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: things-core-deployment
+  labels:
+    app: things-core
+spec:
+  selector:
+    matchLabels:
+      app: things-core
+#   replicas: 2
+  template:
+    metadata:
+      labels:
+        app: things-core
+    spec:
+      containers:
+        - name: things-core
+          image: registry.cn-shanghai.aliyuncs.com/biot_1/things-core:0.0.1-SNAPSHOT
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

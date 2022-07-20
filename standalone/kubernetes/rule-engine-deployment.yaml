@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rule-engine-deployment
+  labels:
+    app: rule-engine
+spec:
+  selector:
+    matchLabels:
+      app: rule-engine
+  #replicas: 2
+  template:
+    metadata:
+      labels:
+        app: rule-engine
+    spec:
+      containers:
+        - name: rule-engine
+          image: registry.cn-shanghai.aliyuncs.com/biot_1/rule-engine:0.0.1-SNAPSHOT
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8280
